@@ -230,13 +230,16 @@ If nul, org-similarity will use a venv inside `emacs-local-directory'."
   "Run Python routine on FILENAME and return the COMMAND output as string."
   (progn
     (org-similarity--check-interpreter-and-deps-status)
-    (let ((command (format "%s -m findlike %s -d %s -l %s -m %s -a %s -c %s -F json -t %s %s %s %s %s"
+    (let ((command (format "%s -m findlike %s -d %s -l %s -m %s -a %s -f %s -c %s -F json -t %s %s %s %s %s"
                            (org-similarity--get-python-interpreter)
                            filename
                            org-similarity-directory
                            org-similarity-language
                            org-similarity-number-of-documents
                            org-similarity-algorithm
+                           (if org-similarity-file-extension-pattern
+                               (shell-quote-argument org-similarity-file-extension-pattern)
+                             "*")
                            (if (boundp 'org-similarity-min-words)
                                (* org-similarity-min-words 5)
                              org-similarity-min-chars)
